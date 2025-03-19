@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .dark {
+        --background-color: black;
+        --color: white;
+    }
+
+    .Day {
+        --background-color: white;
+        --color: black;
+    }
+
+    body {
+        background-color: var(--background-color);
+    }
+
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+
+    .nav {
+        background-color: var(--background-color);
+        display: flex;
+        color: var(--color);
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+
+    }
+
+    .search {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1%;
+    }
+
+    .night {
+        margin-right: 10rem;
+        cursor: pointer;
+    }
+
+    .serach-input {
+        padding: 0.5rem;
+        width: 15%;
+        margin: 2rem;
+    }
+
+    .filter {
+        margin: 1rem 7rem 1rem 1rem;
+        background-color: var(--background-color);
+        color: var(--color);
+        border: 2px solid black;
+        padding: 0.5rem;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .filterList {
+        position: absolute;
+        top: 38px;
+        left: 1px;
+        background-color: var(--background-color);
+        color: var(--color);
+        height: 410%;
+        width: 100%;
+        display: none;
+
+
+    }
+
+    .filterList li {
+        list-style: none;
+        margin: 10px;
+
+    }
+
+    .next-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+    }
+
+    .prev,
+    .next {
+        color: var(--color);
+        border: 2px solid var(--color);
+        background-color: var(--background-color);
+        padding: 0.5rem;
+        border-radius: 1rem;
+        cursor: pointer;
+
+    }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .card {
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid red;
+        width: 300px;
+        height: 300px;
+        margin: 2rem;
+        color: var(--color);
+        border-radius: 20px;
+        padding: 1rem;
+
+    }
+
+    .card h3 {
+        padding: 5px;
+    }
+
+    .country-img {
+        border-radius: 20px;
+        width: 60%;
+        height: 60%;
+        margin: 0rem 1rem 1rem 1rem;
+    }
+
+    .night {
+        border: 2px solid var(--color);
+        border-radius: 10px;
+        text-align: center;
+        color: var(--color);
+        padding: 1rem;
+
+
+    }
+</style>
+
+<body>
+    <main>
+
+        <div class="nav">
+            <span>
+                <h1 style="margin-left: 2rem;">my World?</h1>
+            </span>
+            <div class="night">
+                <span>Dark mode</span>
+            </div>
+        </div>
+
+        <!-- serach -->
+
+        <div class="search">
+
+
+            <input type="search" name="" class="serach-input" placeholder="search Country">
+            <div class="filter">
+                <span class="filter-btn">Filter by Region</span>
+                <div class="filterList">
+                    <ul>
+                        <li>All</li>
+                        <li>All</li>
+                        <li>All</li>
+                        <li>All</li>
+                        <li>All</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <!-- cards -->
+
+        <div class="container">
+
+            <!-- <div class="card">
+    <img src="./WIN_20250103_21_49_09_Pro.jpg" alt="image" class="country-img">
+    <div class="card-contains">
+
+        <h3>country name</h3>
+        <h3>population:5000</h3>
+        <h3>Region:5000</h3>
+    </div>
+
+</div> -->
+
+
+        </div>
+
+        <!-- pagination -->
+
+        <div class="next-btn">
+            <div class="prev"><span>Prev</span></div>
+            <div class="next"><span>Next</span></div>
+        </div>
+
+        <!-- note: button mein disabled work krta hain -->
+    </main>
+
+    <script>
+
+        let CountryData;
+
+
+
+        let country = async () => {
+            let countryName = await fetch("https://restcountries.com/v3.1/all");
+            let data = await countryName.json();
+            console.log(data);
+            CountryData = data;
+            // showCountry(data);
+            displayCountry(data);
+            // pass data to pagination
+
+
+
+        }
+
+
+        //  show 
+        let showCountry = (data) => {
+
+            let container = document.querySelector(".container");
+            container.innerHTML = "";
+
+            data.forEach(element => {
+                let div = document.createElement("div");
+                div.classList.add("card");
+                container.append(div);
+
+                div.innerHTML = `<img src=${element.flags.png} alt="image" class="country-img">
+        <div class="card-contains">
+    
+            <h5>${element.name.common}</h5>
+            <h5>population:${element.population}</h5>
+            <h5>Region: ${element.region}</h5>
+        </div>`;
+            });
+        }
+
+        window.addEventListener("load", (e) => {
+            country();
+        })
+
+        let body = document.querySelector("body");
+        let nightbtn = document.querySelector(".night");
+        let nightspan = document.querySelector(".night span");
+
+        nightbtn.addEventListener("click", (e) => {
+            console.log(e);
+
+            if (body.classList.contains('dark')) {
+                body.classList.remove("dark");
+                body.classList.add("Day");
+                nightspan.innerHTML = `Dark Mode`;
+            }
+            else {
+                body.classList.remove("Day");
+                body.classList.add("dark");
+                nightspan.innerHTML = `Day Mode`;
+            }
+        });
+
+
+
+        // serach
+
+        let search = document.querySelector(".serach-input");
+        search.addEventListener("input", (e) => {
+            console.log(e.target.value);
+
+            let data = CountryData.filter(value => {
+                return value.name.common.toLowerCase().includes(e.target.value.toLowerCase());
+            });
+
+            showCountry(data);
+
+
+        });
+
+        // pagination
+        let prevbtn = document.querySelector(".prev");
+        let Nextbtn = document.querySelector(".next");
+
+
+        let page = 1;
+        let pageitem = 16;
+
+        const displayCountry = (CountryData) => {
+
+
+            let startIndex = (page - 1) * pageitem;
+            let EndIndex = page * pageitem;
+            let sliceCountry = CountryData.slice(startIndex, EndIndex);
+            // console.log(sliceCountry);
+            showCountry(sliceCountry);
+            page++;
+            let totalPage = Math.ceil(CountryData.length / pageitem);
+
+
+
+            Nextbtn.addEventListener("click", () => {
+                let startIndex = (page - 1) * pageitem;
+                let EndIndex = page * pageitem;
+                let sliceCountry = CountryData.slice(startIndex, EndIndex);
+                console.log(sliceCountry);
+                showCountry(sliceCountry);
+
+                if (page >= 1) {
+                    page++;
+                    console.log(page);
+                    showCountry(sliceCountry);
+
+                }
+
+
+                if (page <= totalPage) {
+                    Nextbtn.disabled = true;
+
+                }
+
+            });
+
+            
+
+            prevbtn.addEventListener("click", () => {
+                console.log(page);
+
+                
+                let startIndex = (page - 1) * pageitem;
+                let EndIndex = page * pageitem;
+                let sliceCountry = CountryData.slice(startIndex, EndIndex);
+                // console.log(sliceCountry);
+                showCountry(sliceCountry);
+
+                if (page>1) {
+                    page--;
+                    // console.log(page);
+                    showCountry(sliceCountry);
+
+                }
+
+
+                if (page <= 1) {
+                    prevbtn.disabled = true;
+
+                }
+
+            });
+
+
+        }
+
+
+
+
+
+
+
+
+        // page(CountryData);
+
+
+    </script>
+</body>
+
+</html>
